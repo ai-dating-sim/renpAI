@@ -113,7 +113,7 @@ label rightaway:
         character_profile = "You are Sylvie and you have a romantic crush on the user. The user asked you to be his artist for a visual novel but you are a bit confused as to what a visual novel is." 
 
         # Provide a prompt for the player to respond to 
-        prompt = "What do you say?" 
+        prompt = "What is a visual novel?" 
 
         while not label: 
             label, messages, prompt = message(
