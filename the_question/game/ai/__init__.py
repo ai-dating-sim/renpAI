@@ -1,5 +1,10 @@
+import json
+from urllib import request, error
 from enum import StrEnum
 from typing import Optional
+
+INFERENCE_HOST = "http://0.0.0.0:8080"
+INFERENCE_ENDPOINT = "/generate"
 
 class Role(StrEnum):
     SYSTEM = "system"
@@ -16,7 +21,42 @@ def call(user_input: str, messages: list[dict], candidate_labels: list[str]) -> 
         messages (list[Message]): The list of messages to pass to the LLM.
         candidate_labels (list[str]): The list of possible labels that the LLM may classify the user's response as.
     """
-    processed_messages = []
+    
+    # Validate input
+    if not isinstance(candidate_labels, list) or not all((isinstance(label, str) and label) for label in candidate_labels):
+        raise TypeError("candidate_labels must be a list of strings")
+    if not user_input or not isinstance(user_input, str):
+        raise TypeError("user_input must be a string")
+    processed_messages: list[dict] = _process_messages(messages=messages)
+    
+            
+    payload = {
+        "user_input": user_input,
+        "messages": processed_messages,
+        "candidate_labels": candidate_labels
+    }
+
+    try:
+        data = json.dumps(payload).encode('utf-8')
+        req = request.Request(f"{INFERENCE_HOST}{INFERENCE_ENDPOINT}", data=data, method='POST')
+        req.add_header('Content-Type', 'application/json')
+        
+        with request.urlopen(req) as response:
+            response_data = response.read().decode('utf-8')
+            data = json.loads(response_data)
+            classified_label = data.get("classified_label")
+            messages = data.get("messages")
+            prompt = data.get("prompt")
+            
+            return classified_label, messages, prompt
+            
+            
+    except error.URLError as e:
+        raise RuntimeError(f"Failed to call inference endpoint: {e}")
+    
+def _process_messages(messages: list[dict]) -> list[dict]:
+    """Processes the messages sent from the renpy client to make sure that it conforms to the expected format."""
+    processed_messages: list[dict] = []
     for message in messages:
         if len(message) > 1:
             raise ValueError("Each dictionary in the messages list should only contain one key-value pair")
@@ -25,8 +65,9 @@ def call(user_input: str, messages: list[dict], candidate_labels: list[str]) -> 
         processed_key = original_key.strip().upper()            
         if processed_key not in Role.__members__:
             raise ValueError(f"Invalid key {processed_key} in message. Expected one of {Role.__members__}")
-        processed_messages.append({processed_key.lower(): message[original_key]})
-            
-            
-    # TODO: Call endpoint
-    return user_input, processed_messages, "What do you say?"
+        value: str = message[original_key]
+        if not value or not isinstance(value, str):
+            raise ValueError(f"Value for key {processed_key} in message must be a string")
+        processed_messages.append({processed_key.lower(): value})
+    
+    return processed_messages
