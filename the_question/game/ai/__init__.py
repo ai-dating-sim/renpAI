@@ -4,14 +4,14 @@ from enum import StrEnum
 from typing import Optional
 
 INFERENCE_HOST = "http://0.0.0.0:8080"
-INFERENCE_ENDPOINT = "/generate"
+INFERENCE_ENDPOINT = "/api/message"
 
 class Role(StrEnum):
     SYSTEM = "system"
     ASSISTANT = "assistant"
     USER = "user"
     
-def call(user_input: str, messages: list[dict], candidate_labels: list[str]) -> tuple[Optional[str], list[dict], Optional[str]]:
+def message(user_input: str, messages: list[dict], candidate_labels: list[str]) -> tuple[Optional[str], list[dict], Optional[str]]:
     """Invokes LLM to generate a response to the user input. 
     
     Returns the classified label (if any), the updated list of messages for the next LLM call, and the prompt for the player to respond to.

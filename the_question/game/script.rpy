@@ -97,7 +97,7 @@ label rightaway:
     show sylvie green smile
 
     python: 
-        from ai import call 
+        from ai import message 
         label = None # Provide a prompt for the player to respond to 
         prompt = "What do you say?" 
         # You must provide two messages labelled 'system' and 'assistant' 
@@ -112,7 +112,7 @@ label rightaway:
         ] 
         # This will be what the player sees on the renpy game screen 
         while not label: 
-            label, messages, prompt = call(renpy.input(prompt, length=1000), messages, ["game", "book"]) 
+            label, messages, prompt = message(renpy.input(prompt, length=1000), messages, ["game", "book"]) 
 
     if label == "game": 
         jump game 
