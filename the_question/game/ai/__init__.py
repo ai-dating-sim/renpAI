@@ -11,29 +11,45 @@ class Role(StrEnum):
     ASSISTANT = "assistant"
     USER = "user"
     
-def message(user_input: str, messages: list[dict], candidate_labels: list[str]) -> tuple[Optional[str], list[dict], Optional[str]]:
+def message(character_profile: str, prompt: str, user_input: str, messages: list[dict], possible_labels: list[str]) -> tuple[Optional[str], list[dict], Optional[str]]:
     """Invokes LLM to generate a response to the user input. 
     
     Returns the classified label (if any), the updated list of messages for the next LLM call, and the prompt for the player to respond to.
 
     Args:
-        user_input (str): The user's response to the last question.
-        messages (list[Message]): The list of messages to pass to the LLM.
-        candidate_labels (list[str]): The list of possible labels that the LLM may classify the user's response as.
+        prompt (str): The prompt for the player to respond to.
+        user_input (str): The user's response to the prompt.
+        messages (list[Message]): The list of messages between the player and the visual novel character.
+        possible_lables (list[str]): The list of possible labels that the LLM may classify the user's response as.
     """
     
     # Validate input
-    if not isinstance(candidate_labels, list) or not all((isinstance(label, str) and label) for label in candidate_labels):
-        raise TypeError("candidate_labels must be a list of strings")
+    if not character_profile or not isinstance(character_profile, str):
+        raise TypeError("character_profile must be a string")
+    if not prompt or not isinstance(prompt, str):
+        raise TypeError("prompt must be a string")
     if not user_input or not isinstance(user_input, str):
         raise TypeError("user_input must be a string")
-    processed_messages: list[dict] = _process_messages(messages=messages)
+    if not possible_labels or not isinstance(possible_labels, list) or not all((isinstance(label, str) and label) for label in possible_labels):
+        raise TypeError("possible_lables must be a list of strings")
+    if not isinstance(messages, list) or not all((isinstance(message, dict) and message) for message in messages):
+        raise TypeError("messages must be a list of dictionaries")
     
-            
+    messages.extend([
+        {
+            "role": "assistant",
+            "content": prompt
+        },
+        {
+            "role": "user",
+            "content": user_input
+        }
+    ])
+   
     payload = {
-        "user_input": user_input,
-        "messages": processed_messages,
-        "candidate_labels": candidate_labels
+        "character_profile": character_profile,
+        "messages": messages,
+        "possible_labels": possible_labels,
     }
 
     try:
@@ -45,7 +61,6 @@ def message(user_input: str, messages: list[dict], candidate_labels: list[str]) 
             response_data = response.read().decode('utf-8')
             data = json.loads(response_data)
             classified_label = data.get("classified_label")
-            messages = data.get("messages")
             prompt = data.get("prompt")
             
             return classified_label, messages, prompt
@@ -54,32 +69,3 @@ def message(user_input: str, messages: list[dict], candidate_labels: list[str]) 
     except error.URLError as e:
         raise RuntimeError(f"Failed to call inference endpoint: {e}")
     
-def _process_messages(messages: list[dict]) -> list[dict]:
-    """Processes the messages sent from the renpy client to make sure that it conforms to the expected format."""
-    processed_messages: list[dict] = []
-    for message in messages:
-        if len(message) > 1:
-            raise ValueError("Each dictionary in the messages list should only contain one key-value pair")
-        
-        original_key = list(message.keys())[0]
-        processed_key = original_key.strip().lower()
-        modified_dict: dict[str, str] = {}
-        
-        if processed_key == Role.SYSTEM:
-            modified_dict["role"] = Role.SYSTEM
-        elif processed_key == Role.ASSISTANT:
-            modified_dict["role"] = Role.ASSISTANT
-        elif processed_key == Role.USER:
-            modified_dict["role"] = Role.USER
-        else:
-            raise ValueError(f"Invalid key {processed_key} in message. Expected one of {Role.__members__}")
-        
-        value: str = message[original_key]
-        if not value or not isinstance(value, str):
-            raise ValueError(f"Value for key {processed_key} in message must be a string")
-        
-        modified_dict["content"] = value
-        
-        processed_messages.append(modified_dict)
-    
-    return processed_messages

@@ -97,22 +97,32 @@ label rightaway:
     show sylvie green smile
 
     python: 
+        # Import the message function
         from ai import message 
-        label = None # Provide a prompt for the player to respond to 
+
+        # Define a variable that will store the eventual label which the plot jumps to.
+        label = None 
+
+        # Define a variable that will store the messages between the player and the visual novel character
+        messages = []
+
+        # Define a list of possible labels that the plot can jump to.
+        possible_labels = ["game", "book"]
+
+        # Provide some context for the character that the player is interacting with. Refer to the player as 'user' 
+        character_profile = "You are Sylvie and you have a romantic crush on the user. The user asked you to be his artist for a visual novel but you are a bit confused as to what a visual novel is." 
+
+        # Provide a prompt for the player to respond to 
         prompt = "What do you say?" 
-        # You must provide two messages labelled 'system' and 'assistant' 
-        messages = [
-            { 
-                # Provide some context for the character that the player is interacting with. Refer to the player as 'user' 
-                "system": "You are Sylvie and you have a romantic crush on the user. The user asked you to be his artist for a visual novel but you are a bit confused as to what a visual novel is." 
-            }, 
-            { 
-                "assistant": prompt 
-            } 
-        ] 
-        # This will be what the player sees on the renpy game screen 
+
         while not label: 
-            label, messages, prompt = message(renpy.input(prompt, length=1000), messages, ["game", "book"]) 
+            label, messages, prompt = message(
+                character_profile,
+                prompt,
+                renpy.input(prompt, length=1000), 
+                messages, 
+                possible_labels
+            ) 
 
     if label == "game": 
         jump game 
