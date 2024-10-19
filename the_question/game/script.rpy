@@ -115,6 +115,7 @@ label rightaway:
         # Provide a prompt for the player to respond to 
         prompt = "What is a visual novel?" 
 
+        # The visual novel character will start a dynamic conversation with the player until a a label is assigned to the conversation
         while not label: 
             label, messages, prompt = message(
                 character_profile,
@@ -124,6 +125,7 @@ label rightaway:
                 possible_labels
             ) 
 
+    # Jump to the associated label based on the the result of the message function
     if label == "game": 
         jump game 
     elif label == "book": 
