@@ -118,12 +118,12 @@ label rightaway:
         # Provide a prompt for the player to respond to 
         prompt = "What is a visual novel?" 
 
-        # The visual novel character will start a dynamic conversation with the player until a a label is assigned to the conversation
+        # The visual novel character will start a dynamic conversation with the player until a a label is assigned to the conversation. The most appropriate image will also be chosen based on the state of the conversation
         while not label: 
             image, label, messages, prompt = message(
                 character_profile,
                 prompt,
-                renpy.input(prompt, length=1000), 
+                renpy.input(prompt, length=500), 
                 messages, 
                 possible_images,
                 possible_labels
