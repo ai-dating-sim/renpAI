@@ -62,12 +62,24 @@ def _process_messages(messages: list[dict]) -> list[dict]:
             raise ValueError("Each dictionary in the messages list should only contain one key-value pair")
         
         original_key = list(message.keys())[0]
-        processed_key = original_key.strip().upper()            
-        if processed_key not in Role.__members__:
+        processed_key = original_key.strip().lower()
+        modified_dict: dict[str, str] = {}
+        
+        if processed_key == Role.SYSTEM:
+            modified_dict["role"] = Role.SYSTEM
+        elif processed_key == Role.ASSISTANT:
+            modified_dict["role"] = Role.ASSISTANT
+        elif processed_key == Role.USER:
+            modified_dict["role"] = Role.USER
+        else:
             raise ValueError(f"Invalid key {processed_key} in message. Expected one of {Role.__members__}")
+        
         value: str = message[original_key]
         if not value or not isinstance(value, str):
             raise ValueError(f"Value for key {processed_key} in message must be a string")
-        processed_messages.append({processed_key.lower(): value})
+        
+        modified_dict["content"] = value
+        
+        processed_messages.append(modified_dict)
     
     return processed_messages
