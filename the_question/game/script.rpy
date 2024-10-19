@@ -109,6 +109,9 @@ label rightaway:
         # Define a list of possible labels that the plot can jump to.
         possible_labels = ["game", "book"]
 
+        # Define a list of possible images that the language model can choose to pair with the conversation
+        possible_images = ["sylvie blue giggle", "sylvie blue smile"]
+
         # Provide some context for the character that the player is interacting with. Refer to the player as 'user' 
         character_profile = "You are Sylvie and you have a romantic crush on the user. The user asked you to be his artist for a visual novel but you are a bit confused as to what a visual novel is." 
 
@@ -117,13 +120,15 @@ label rightaway:
 
         # The visual novel character will start a dynamic conversation with the player until a a label is assigned to the conversation
         while not label: 
-            label, messages, prompt = message(
+            image, label, messages, prompt = message(
                 character_profile,
                 prompt,
                 renpy.input(prompt, length=1000), 
                 messages, 
+                possible_images,
                 possible_labels
             ) 
+            renpy.show(image)
 
     # Jump to the associated label based on the the result of the message function
     if label == "game": 
