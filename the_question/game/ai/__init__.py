@@ -2,9 +2,12 @@ import json
 from urllib import request, error
 from enum import StrEnum
 from typing import Optional
+import ssl
 
-INFERENCE_HOST = "http://0.0.0.0:8080"
+INFERENCE_HOST = "https://renpai.duckdns.org:8080"
 INFERENCE_ENDPOINT = "/api/message"
+
+context = ssl._create_unverified_context()
 
 # TODO: Hardcoded for now, will need to populate from .env variable
 API_KEY = "your-api-key"
@@ -65,7 +68,7 @@ def message(character_profile: str, prompt: str, user_input: str, messages: list
         req.add_header('Content-Type', 'application/json')
         req.add_header('X-API-Key', API_KEY)
         
-        with request.urlopen(req) as response:
+        with request.urlopen(req, context=context) as response:
             response_data = response.read().decode('utf-8')
             data = json.loads(response_data)
             image = data.get("image")
