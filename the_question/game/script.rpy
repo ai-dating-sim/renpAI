@@ -126,7 +126,7 @@ label rightaway:
             if not user_input:
                 continue
 
-            image, label, messages, prompt = message(
+            image, label, messages, prompt_messages_list = message(
                 character_profile,
                 prompt,
                 user_input, 
@@ -135,6 +135,12 @@ label rightaway:
                 possible_labels
             ) 
             renpy.show(image)
+
+            if prompt_messages_list:
+                prompt = prompt_messages_list[-1]
+
+                for p in prompt_messages_list[:-1]:
+                    renpy.say(s, p)
 
     # Jump to the associated label based on the the result of the message function
     if label == "game": 
