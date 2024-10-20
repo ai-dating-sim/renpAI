@@ -120,7 +120,7 @@ label rightaway:
 
         # The visual novel character will start a dynamic conversation with the player until a a label is assigned to the conversation. The most appropriate image will also be chosen based on the state of the conversation
         while not label: 
-            image, label, messages, prompt = message(
+            image, label, messages, output = message(
                 character_profile,
                 prompt,
                 renpy.input(prompt, length=500), 
@@ -129,6 +129,12 @@ label rightaway:
                 possible_labels
             ) 
             renpy.show(image)
+
+        if isinstance(output, list):
+            for msg in output:
+                renpy.say(s, msg)
+        elif isinstance(output, str):
+            renpy.say(s, output)
 
     # Jump to the associated label based on the the result of the message function
     if label == "game": 
