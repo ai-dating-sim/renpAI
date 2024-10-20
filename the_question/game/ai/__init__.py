@@ -6,6 +6,9 @@ from typing import Optional
 INFERENCE_HOST = "http://0.0.0.0:8080"
 INFERENCE_ENDPOINT = "/api/message"
 
+# TODO: Hardcoded for now, will need to populate from .env variable
+API_KEY = "your-api-key"
+
 class Role(StrEnum):
     SYSTEM = "system"
     ASSISTANT = "assistant"
@@ -60,6 +63,7 @@ def message(character_profile: str, prompt: str, user_input: str, messages: list
         data = json.dumps(payload).encode('utf-8')
         req = request.Request(f"{INFERENCE_HOST}{INFERENCE_ENDPOINT}", data=data, method='POST')
         req.add_header('Content-Type', 'application/json')
+        req.add_header('X-API-Key', API_KEY)
         
         with request.urlopen(req) as response:
             response_data = response.read().decode('utf-8')
