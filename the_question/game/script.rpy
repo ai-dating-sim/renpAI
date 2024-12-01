@@ -119,7 +119,7 @@ label rightaway:
 
         # Provide a prompt for the player to respond to 
         prompt = "What is a visual novel?" 
-
+        prompt_messages_list = [prompt]
         # The visual novel character will start a dynamic conversation with the player until a a label is assigned to the conversation. The most appropriate image will also be chosen based on the state of the conversation
         while not label: 
 
@@ -130,7 +130,7 @@ label rightaway:
 
             image, label, messages, prompt_messages_list = message(
                 character_profile,
-                prompt,
+                prompt_messages_list,
                 user_input, 
                 messages, 
                 possible_images,
