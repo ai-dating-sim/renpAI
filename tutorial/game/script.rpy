@@ -151,7 +151,7 @@ label start:
 
     window show
 
-    e "Hi! My name is Eileen, and I'd like to welcome you to the Ren'Py tutorial."
+    e "To invoke AI, simply call the message function with the character profile and prompt!"
 
     show eileen happy
 

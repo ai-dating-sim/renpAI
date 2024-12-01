@@ -9,27 +9,8 @@ default book = False
 # The game starts here.
 label start:
 
-    # Start by playing some music.
-    play music "illurock.opus"
-
-    scene bg lecturehall
-    with fade
-
-    "It's only when I hear the sounds of shuffling feet and supplies being put away that I realize that the lecture's over."
-
-    "Professor Eileen's lectures are usually interesting, but today I just couldn't concentrate on it."
-
-    "I've had a lot of other thoughts on my mind...thoughts that culminate in a question."
-
-    "It's a question that I've been meaning to ask a certain someone."
-
     scene bg uni
-    with fade
-
-    "When we come out of the university, I spot her right away."
-
-    show sylvie green normal
-    with dissolve
+    show sylvie green smile
 
     "I've known Sylvie since we were kids. She's got a big heart and she's always been a good friend to me."
 
@@ -37,34 +18,9 @@ label start:
 
     "More than just talking, more than just walking home together when our classes end."
 
-    # menu:
+    s "Hi Sharat! Are you going home now? Wanna walk back with me?"
 
-    # "As soon as she catches my eye, I decide..."
-
-        # "To ask her right away.":
-
-        #     jump rightaway
-
-        # "To ask her later.":
-
-        #     jump later
-
-    python: 
-        user_input = renpy.input("As soon as she catches my eye, I decide...", length=500).strip()
-
-label rightaway:
-
-    show sylvie green smile
-
-    s "Hi there! How was class?"
-
-    m "Good..."
-
-    "I can't bring myself to admit that it all went in one ear and out the other."
-
-    m "Are you going home now? Wanna walk back with me?"
-
-    s "Sure!"
+    m "Sure!"
 
     scene bg meadow
     with fade
@@ -72,8 +28,6 @@ label rightaway:
     "After a short while, we reach the meadows just outside the neighborhood where we both live."
 
     "It's a scenic view I've grown used to. Autumn is especially beautiful here."
-
-    "When we were children, we played in these meadows a lot, so they're full of memories."
 
     m "Hey... Umm..."
 
@@ -83,18 +37,6 @@ label rightaway:
     "She turns to me and smiles. She looks so welcoming that I feel my nervousness melt away."
 
     "I'll ask her...!"
-
-    m "Ummm... Will you..."
-
-    m "Will you be my artist for a visual novel?"
-
-    show sylvie green surprised
-
-    "Silence."
-
-    "She looks so shocked that I begin to fear the worst."
-
-    s "What is a visual novel?"
 
     show sylvie green smile
 
@@ -109,16 +51,18 @@ label rightaway:
         messages = []
 
         # Define a list of possible labels that the plot can jump to.
-        possible_labels = ["game", "book"]
+        possible_labels = ["too fast", "just nice"]
 
         # Define a list of possible images that the language model can choose to pair with the conversation
-        possible_images = ["sylvie blue giggle", "sylvie blue smile"]
+        possible_images = ["sylvie blue giggle", "sylvie blue surprised"]
 
         # Provide some context for the character that the player is interacting with. Refer to the player as 'user' 
-        character_profile = "You are Sylvie and you have a romantic crush on the user. The user asked you to be his artist for a visual novel but you are a bit confused as to what a visual novel is." 
+        character_profile = "You are Sylvie and you have a slight romantic crush on the user. You are interested in taking the relationship to the next level but you are a bit scared of moving too fast. Depending on how the user phrases his question, you have to make a decision on whether things are moving too fast." 
 
         # Provide a prompt for the player to respond to 
-        prompt = "What is a visual novel?" 
+        prompt = "How will you hint at a romantic relationship with Sylvie?" 
+
+
         prompt_messages_list = [prompt]
         # The visual novel character will start a dynamic conversation with the player until a a label is assigned to the conversation. The most appropriate image will also be chosen based on the state of the conversation
         while not label: 
@@ -145,80 +89,21 @@ label rightaway:
                     renpy.say(s, p)
 
     # Jump to the associated label based on the the result of the message function
-    if label == "game": 
-        jump game 
-    elif label == "book": 
-        jump book
+    if label == "too fast": 
+        jump too_fast 
+    elif label == "just nice": 
+        jump just_nice
 
+label just_nice:
 
-label game:
+    show sylvie green giggle
 
-    m "It's a kind of videogame you can play on your computer or a console."
-
-    m "Visual novels tell a story with pictures and music."
-
-    m "Sometimes, you also get to make choices that affect the outcome of the story."
-
-    s "So it's like those choose-your-adventure books?"
-
-    m "Exactly! I've got lots of different ideas that I think would work."
-
-    m "And I thought maybe you could help me...since I know how you like to draw."
-
-    m "It'd be hard for me to make a visual novel alone."
-
-    show sylvie green normal
-
-    s "Well, sure! I can try. I just hope I don't disappoint you."
-
-    m "You know you could never disappoint me, Sylvie."
-
-    jump marry
-
-
-label book:
-
-    $ book = True
-
-    m "It's like an interactive book that you can read on a computer or a console."
-
-    show sylvie green surprised
-
-    s "Interactive?"
-
-    m "You can make choices that lead to different events and endings in the story."
-
-    s "So where does the \"visual\" part come in?"
-
-    m "Visual novels have pictures and even music, sound effects, and sometimes voice acting to go along with the text."
-
-    show sylvie green smile
-
-    s "I see! That certainly sounds like fun. I actually used to make webcomics way back when, so I've got lots of story ideas."
-
-    m "That's great! So...would you be interested in working with me as an artist?"
-
-    s "I'd love to!"
-
-    jump marry
-
-label marry:
+    "Sylvie did not answer my question directly but she looks visibly happy."
 
     scene black
     with dissolve
 
-    "And so, we become a visual novel creating duo."
-
-    scene bg club
-    with dissolve
-
-    "Over the years, we make lots of games and have a lot of fun making them."
-
-    if book:
-
-        "Our first game is based on one of Sylvie's ideas, but afterwards I get to come up with stories of my own, too."
-
-    "We take turns coming up with stories and characters and support each other to make some great games!"
+    "From the day onwards, we became closer and closer."
 
     "And one day..."
 
@@ -235,23 +120,9 @@ label marry:
 
     m "What? Where did this come from?"
 
-    show sylvie blue surprised
-
-    s "Come on, how long have we been dating?"
-
-    m "A while..."
-
-    show sylvie blue smile
-
-    s "These last few years we've been making visual novels together, spending time together, helping each other..."
-
-    s "I've gotten to know you and care about you better than anyone else. And I think the same goes for you, right?"
-
-    m "Sylvie..."
-
     show sylvie blue giggle
 
-    s "But I know you're the indecisive type. If I held back, who knows when you'd propose?"
+    s "I know you're the indecisive type. If I held back, who knows when you'd propose?"
 
     show sylvie blue normal
 
@@ -259,20 +130,10 @@ label marry:
 
     m "Of course I will! I've actually been meaning to propose, honest!"
 
-    s "I know, I know."
-
-    m "I guess... I was too worried about timing. I wanted to ask the right question at the right time."
-
-    show sylvie blue giggle
-
-    s "You worry too much. If only this were a visual novel and I could pick an option to give you more courage!"
-
     scene black
     with dissolve
 
     "We get married shortly after that."
-
-    "Our visual novel duo lives on even after we're married...and I try my best to be more decisive."
 
     "Together, we live happily ever after even now."
 
@@ -280,18 +141,15 @@ label marry:
 
     return
 
-label later:
+label too_fast:
 
-    "I can't get up the nerve to ask right now. With a gulp, I decide to ask her later."
+    show sylvie green surprised
 
-    scene black
-    with dissolve
+    "Sylvie looks visibly shocked by my response."
 
-    "But I'm an indecisive person."
+    "I'm not sure what to do now."
 
-    "I couldn't ask her that day and I end up never being able to ask her."
-
-    "I guess I'll never know the answer to my question now..."
+    "I think I will just run away now."
 
     "{b}Bad Ending{/b}."
 
