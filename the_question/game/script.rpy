@@ -37,18 +37,20 @@ label start:
 
     "More than just talking, more than just walking home together when our classes end."
 
-    menu:
+    # menu:
 
-        "As soon as she catches my eye, I decide..."
+    # "As soon as she catches my eye, I decide..."
 
-        "To ask her right away.":
+        # "To ask her right away.":
 
-            jump rightaway
+        #     jump rightaway
 
-        "To ask her later.":
+        # "To ask her later.":
 
-            jump later
+        #     jump later
 
+    python: 
+        user_input = renpy.input("As soon as she catches my eye, I decide...", length=500).strip()
 
 label rightaway:
 

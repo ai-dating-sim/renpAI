@@ -4,7 +4,8 @@ from enum import StrEnum
 from typing import Optional
 import ssl
 
-INFERENCE_HOST = "https://renpai.duckdns.org:8080"
+# INFERENCE_HOST = "https://renpai.duckdns.org:8080"
+INFERENCE_HOST = "http://0.0.0.0:8080"
 INFERENCE_ENDPOINT = "/api/message"
 
 context = ssl._create_unverified_context()
